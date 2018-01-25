@@ -14,7 +14,7 @@ defmodule TwitterRouter do
   get "/" do
     conn
     |> put_resp_content_type("text/html")
-    |> send_file(200, "priv/static/index.html")
+    |> send_file(200, "layouts/pages/index.html.eex")
   end
 
   match _ do
