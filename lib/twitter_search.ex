@@ -12,7 +12,7 @@ defmodule TwitterSearch do
       :world
 
   """
-  def hello do
-    :world
+  def start do
+    Plug.Adapters.Cowboy.http(TwitterRouter, [])
   end
 end
