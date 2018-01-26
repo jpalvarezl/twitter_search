@@ -1,1 +1,1 @@
-<%= EEx.eval_file ../partials/search_bar.eex %>
+<%= EEx.eval_file "layouts/partials/search_bar.eex" %>

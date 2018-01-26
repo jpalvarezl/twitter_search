@@ -1,5 +1,6 @@
 defmodule TwitterRouter do
   use Plug.Router
+  require EEx
 
   plug Plug.Static, at: "/", from: :server
   plug :match
@@ -12,9 +13,10 @@ defmodule TwitterRouter do
   end
 
   get "/" do
+    file = EEx.eval_file "layouts/pages/index.html.eex"
     conn
     |> put_resp_content_type("text/html")
-    |> send_file(200, "layouts/pages/index.html.eex")
+    |> resp(200, file)
   end
 
   match _ do
