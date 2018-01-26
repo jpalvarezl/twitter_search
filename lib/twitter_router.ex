@@ -13,10 +13,11 @@ defmodule TwitterRouter do
   end
 
   get "/" do
-    file = EEx.eval_file "layouts/pages/index.html.eex"
-    conn
-    |> put_resp_content_type("text/html")
-    |> resp(200, file)
+    with conn <- put_resp_content_type(conn, "text/html"),
+         body <- EEx.eval_file "layouts/pages/index.html.eex"
+    do
+      resp(conn, 200, body)
+    end
   end
 
   match _ do
