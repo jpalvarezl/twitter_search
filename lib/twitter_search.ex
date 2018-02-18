@@ -13,6 +13,6 @@ defmodule TwitterSearch do
 
   """
   def start(_type, _args) do
-    Plug.Adapters.Cowboy.http(TwitterRouter, [])
+    {ok, _} = Plug.Adapters.Cowboy.http(TwitterRouter, [])
   end
 end
