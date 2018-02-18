@@ -2,15 +2,8 @@ defmodule TwitterRouter do
   use Plug.Router
   require EEx
 
-  plug Plug.Static, at: "/", from: :server
   plug :match
   plug :dispatch
-
-  def init(options) do
-    # initialize options
-
-    options
-  end
 
   get "/" do
     with conn <- put_resp_content_type(conn, "text/html"),
