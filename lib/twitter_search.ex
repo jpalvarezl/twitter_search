@@ -1,7 +1,10 @@
 defmodule TwitterSearch do
-  
+
   def start(_type, _args) do
-    {ok, _} = Plug.Adapters.Cowboy.http(TwitterRouter, [])
+    {_ok, _} = Plug.Adapters.Cowboy.http(TwitterRouter, [])
   end
 
+  def search(search_term) when is_bitstring(search_term) and search_term != "" do
+
+  end
 end
