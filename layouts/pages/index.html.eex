@@ -11,6 +11,8 @@
   <title>Twitter search</title>
 </head>
 <body>
+
+  <%= if String.length(search_term) != 0 do search_term end %>
   <%= EEx.eval_file "layouts/partials/search_bar.html.eex" %>
 
   <%= EEx.eval_file "layouts/partials/search_result.html.eex" %>

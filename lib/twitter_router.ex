@@ -9,7 +9,7 @@ defmodule TwitterRouter do
 
   get "/" do
     with conn <- put_resp_content_type(conn, "text/html"),
-         body <- EEx.eval_file "layouts/pages/index.html.eex"
+         body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: ""])
     do
       resp(conn, 200, body)
     end
