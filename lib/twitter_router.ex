@@ -16,8 +16,13 @@ defmodule TwitterRouter do
   end
 
   post "/search" do
-    IO.inspect conn
-    send_resp(conn, 200, "Searched for: "<>conn.params["search-term"])
+    #pass search-term as parameter
+    with conn <- put_resp_content_type(conn, "text/html"),
+         body <- EEx.eval_file "layouts/pages/index.html.eex"
+    do
+      send_resp(conn, 200, "Searched for: "<>conn.params["search-term"])
+      #resp(conn, 200, body)
+    end
   end
 
   match _ do
