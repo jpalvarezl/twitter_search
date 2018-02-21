@@ -1,10 +1,14 @@
 defmodule TwitterApi do
 
   def get_token() do
-    url = "https://api.twitter.com/oauth2/token"
-    headers = [Authorization: "", #Base.encode64(consumer_key:consumer_secret)
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"]
-    options = [ssl: [{:versions, [:'tlsv1.2']}], recv_timeout: 500]
+    # url = "https://api.twitter.com/oauth2/token"
+    # headers = [Authorization: "", #Base.encode64(consumer_key:consumer_secret)
+    #   "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"]
+    # options = [ssl: [{:versions, [:'tlsv1.2']}], recv_timeout: 500]
+    consumer_key = Application.get_env(:twitter_search, :consumer_key)
+    consumer_secret = Application.get_env(:twitter_search, :consumer_secret)
+    authorization = "Basic "<>Base.encode64(consumer_key<>":"<>consumer_secret)
+    IO.puts authorization
   end
 
   def get_twitts do

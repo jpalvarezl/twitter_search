@@ -20,6 +20,8 @@ use Mix.Config
 #
 #     config :logger, level: :info
 #
+config :twitter_search, consumer_key: System.get_env("TWITTER_CONSUMER_KEY")
+config :twitter_search, consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
