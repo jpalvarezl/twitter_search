@@ -2,14 +2,14 @@ defmodule TwitterApi do
 
   @auth_url "https://api.twitter.com/oauth2/token"
 
-  defp get_auth() do
+  defp generate_auth() do
     consumer_key = Application.get_env(:twitter_search, :consumer_key)
     consumer_secret = Application.get_env(:twitter_search, :consumer_secret)
     "Basic "<>Base.encode64(consumer_key<>":"<>consumer_secret)
   end
 
   def post_auth() do
-    headers = [{"Authorization", get_auth()},
+    headers = [{"Authorization", generate_auth()},
       {"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}]
     body = "grant_type=client_credentials"
     options = [ssl: [{:versions, [:'tlsv1.2']}], recv_timeout: 500]
