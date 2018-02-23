@@ -1,6 +1,8 @@
 defmodule TwitterApi do
 
   @auth_url "https://api.twitter.com/oauth2/token"
+  @token_fields ["token_type", "access_token"]
+  @tweet_fields ["created_at","text", "user"]
 
   defp generate_auth() do
     consumer_key = Application.get_env(:twitter_search, :consumer_key)
@@ -21,24 +23,40 @@ defmodule TwitterApi do
   def decode_auth_token(body) do
     body
     |> Poison.decode!
-    |> Map.take(["token_type", "access_token"])
+    |> Map.take(@token_fields)
     |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
   end
 
-  def get_tweets(search_term) do
+  ########################## TWEET SEARCH ###################################
+
+  def get_tweet(search_term) do
+    IO.inspect get_tweets(search_term, 1)
+  end
+
+  def get_tweets(search_term, count) do
     token_json = post_auth()
     token = token_json[:access_token]
-    url = "https://api.twitter.com/1.1/search/tweets.json?q="<>search_term
+    url = "https://api.twitter.com/1.1/search/tweets.json?q=#{URI.encode(search_term)}&count=#{count}"
     headers = ["Authorization": "Bearer #{token}", "Accept": "Application/json; Charset=utf-8"]
     options = [ssl: [{:versions, [:'tlsv1.2']}], recv_timeout: 500]
     {:ok, response} = HTTPoison.get(url, headers, options)
-    IO.inspect decode_tweets(response.body)
+    decode_tweets(response.body)
   end
 
   def decode_tweets(body) do
     body
     |> Poison.decode!
-    # |> Map.take(["token_type", "access_token"])
+    |> map_tweets
+    # |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
+  end
+
+  def map_tweets(tweets) do
+    tweets
+    |> Map.take(["statuses"])
+    |> Map.get("statuses")
+    |> Enum.map(fn tweet -> Map.take(tweet, @tweet_fields) end)
+    # |> Map.take(["created_at"])
+    # |> Map.take(["text", "User"])
     # |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
   end
 end
