@@ -3,6 +3,7 @@ defmodule TwitterApi do
   @auth_url "https://api.twitter.com/oauth2/token"
   @token_fields ["token_type", "access_token"]
   @tweet_fields ["created_at","text", "user"]
+  @user_fields ["name", "profile_image_url"]
 
   defp generate_auth() do
     consumer_key = Application.get_env(:twitter_search, :consumer_key)
@@ -30,7 +31,7 @@ defmodule TwitterApi do
   ########################## TWEET SEARCH ###################################
 
   def get_tweet(search_term) do
-    IO.inspect get_tweets(search_term, 1)
+    get_tweets(search_term, 1)
   end
 
   def get_tweets(search_term, count) do
@@ -46,17 +47,14 @@ defmodule TwitterApi do
   def decode_tweets(body) do
     body
     |> Poison.decode!
-    |> map_tweets
-    # |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
+    |> filter_fields
   end
 
-  def map_tweets(tweets) do
+  def filter_fields(tweets) do
     tweets
     |> Map.take(["statuses"])
     |> Map.get("statuses")
     |> Enum.map(fn tweet -> Map.take(tweet, @tweet_fields) end)
-    # |> Map.take(["created_at"])
-    # |> Map.take(["text", "User"])
-    # |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
+    |> Enum.map(fn tweet -> Map.replace!(tweet, "user", Map.take(Map.get(tweet, "user"), @user_fields))end)
   end
 end
