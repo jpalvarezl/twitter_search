@@ -1,24 +1,28 @@
 defmodule TwitterRouter do
+
+  @search_result_count 50
+
   use Plug.Router
   require EEx
 
   plug :match
   plug Plug.Parsers, parsers: [:urlencoded]
   plug :dispatch
-  #https://stackoverflow.com/a/34479313/7721253
 
   get "/" do
     with conn <- put_resp_content_type(conn, "text/html"),
-         body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: ""])
+         body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: "", tweets: []])
     do
       resp(conn, 200, body)
     end
   end
 
   post "/search" do
-    #pass search-term as parameter
+    search_term = conn.params["search_term"]
+    tweets = TwitterApi.get_tweets(search_term, @search_result_count)
+
     with conn <- put_resp_content_type(conn, "text/html"),
-         body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: conn.params["search_term"]])
+         body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: search_term, tweets: tweets])
     do
       resp(conn, 200, body)
     end
