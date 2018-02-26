@@ -2,8 +2,6 @@ defmodule TwitterApi do
 
   @auth_url "https://api.twitter.com/oauth2/token"
   @token_fields ["token_type", "access_token"]
-  @tweet_fields ["created_at","text", "user"]
-  @user_fields ["name", "profile_image_url"]
 
   defp generate_auth() do
     consumer_key = Application.get_env(:twitter_search, :consumer_key)
@@ -52,9 +50,18 @@ defmodule TwitterApi do
 
   def filter_fields(tweets) do
     tweets
-    |> Map.take(["statuses"])
     |> Map.get("statuses")
-    |> Enum.map(fn tweet -> Map.take(tweet, @tweet_fields) end)
-    |> Enum.map(fn tweet -> Map.replace!(tweet, "user", Map.take(Map.get(tweet, "user"), @user_fields))end)
+    |> Enum.map(&format_tweet(&1))
+  end
+
+  def format_tweet(tweet) do
+    %{
+      text: tweet["text"],
+      created_at: tweet["created_at"],
+      user: %{
+        name: tweet["user"]["name"],
+        profile_image_url: tweet["user"]["profile_image_url"]
+      }
+    }
   end
 end
