@@ -19,7 +19,7 @@ defmodule TwitterRouter do
 
   post "/search" do
     search_term = conn.params["search_term"]
-    tweets = TwitterApi.get_tweets(search_term, @search_result_count)
+    tweets = TweetService.get_tweets(search_term, @search_result_count)
 
     with conn <- put_resp_content_type(conn, "text/html"),
          body <- EEx.eval_file("layouts/pages/index.html.eex",[search_term: search_term, tweets: tweets])
